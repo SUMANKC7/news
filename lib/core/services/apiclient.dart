@@ -15,11 +15,14 @@ class Apiclient {
   );
 
   Future<Response> getNews(
-    String endpoint, {
-    Map<String, dynamic>? params,
-  }) async {
-    //It add up baseurl+ endpoint + params
-    // https://newsapi.org/v2/ + everything + coming parameters such as filter or types
-    return   _dio.get(endpoint,queryParameters: params);
+    String endpoint, Map<String, dynamic> params) async {
+    try {
+      //It add up baseurl+ endpoint + params
+      // https://newsapi.org/v2/ + everything + coming parameters such as filter or types
+      params["apiKey"] = "852d87f2bd424feb801caeb2695c79f8";
+      return _dio.get(endpoint, queryParameters: params);
+    } catch (e) {
+      rethrow;
+    }
   }
 }
