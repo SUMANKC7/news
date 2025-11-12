@@ -6,14 +6,6 @@ import 'package:weatherapp/features%20/allnews/data/repository/newsrepository.da
 part 'allnews_event.dart';
 part 'allnews_state.dart';
 
-// class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
-//   AllnewsBloc() : super(AllnewsInitial()) {
-//     on<AllnewsEvent>((event, emit) {
-//       // TODO: implement event handler
-//     });
-//   }
-// }
-
 class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
   final NewsRepository repository;
 

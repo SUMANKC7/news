@@ -7,8 +7,12 @@ class NewsRepository {
   final Newsservices newsservices;
   const NewsRepository(this.newsservices);
 
-  Future<List<AllnewsModel>> fetchNews({String? category}) async {
+  Future<List<AllnewsModel>> fetchNews({
+    String? category,
+    String? sources,
+  }) async {
     final params = <String, dynamic>{};
+    params["sources"] = "techcrunch";
 
     if (category != null && category.isNotEmpty) {
       params["category"] = category;
@@ -19,7 +23,8 @@ class NewsRepository {
         params: params,
       );
       if (response.statusCode == 200) {
-        final jsonResponse = response.data["articles"];
+        final List<dynamic> jsonResponse = response.data["articles"];
+        log("Data:$jsonResponse");
         return jsonResponse
             .map((newsarticle) => AllnewsModel.fromJson(newsarticle))
             .toList();
@@ -37,8 +42,9 @@ class NewsRepository {
   Future<List<AllnewsModel>> searchNews(String? query) async {
     final userquery = <String, dynamic>{};
     if (query != null && query.isNotEmpty) {
-      userquery["q"] = "apple";
-      userquery["sortBy"] = "popularity";
+      userquery["q"] = query;
+      userquery["from"] = "2025-10-11";
+      userquery["sortBy"] = "publishedAt";
     }
 
     try {
@@ -52,7 +58,6 @@ class NewsRepository {
         return jsonResponse
             .map((newsarticle) => AllnewsModel.fromJson(newsarticle))
             .toList();
-        
       } else {
         throw Exception(
           "Failed to search the data: Status code ${response.statusCode}",
