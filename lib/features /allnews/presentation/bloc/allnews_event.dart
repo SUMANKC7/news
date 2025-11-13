@@ -1,11 +1,15 @@
 part of 'allnews_bloc.dart';
 
-@immutable
+
 sealed class AllnewsEvent {}
 
 class FetchNewsEvent extends AllnewsEvent {
-  final String? category;
+  final Category? category;
 
-  FetchNewsEvent({ this.category});
+  FetchNewsEvent({this.category});
+}
 
+class SearchNewsEvent extends AllnewsEvent {
+  final String? query;
+  SearchNewsEvent({this.query});
 }

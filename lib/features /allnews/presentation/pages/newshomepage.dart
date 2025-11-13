@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
 import 'package:weatherapp/features%20/allnews/presentation/bloc/allnews_bloc.dart';
-import 'package:weatherapp/features%20/allnews/presentation/widgets/carousel_page_indicator.dart';
-import 'package:weatherapp/features%20/allnews/presentation/widgets/recommended_news.dart';
-import 'package:weatherapp/features%20/allnews/presentation/widgets/showcarouselslider.dart';
+import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/carousel_page_indicator.dart';
+import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/recommended_news.dart';
+import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/showcarouselslider.dart';
 
 class NewsHomePage extends StatefulWidget {
   const NewsHomePage({super.key});
@@ -30,6 +30,10 @@ class _NewsHomePageState extends State<NewsHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        // backgroundColor: Theme.of(context).colorScheme.surface,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
