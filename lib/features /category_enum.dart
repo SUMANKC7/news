@@ -1,8 +1,10 @@
 enum Category{
-  all,
-  sport,
-  politic,
+  general,
+  sports,
+  politics,
   technology,
   business,
-  health
+  health,
+  science,
+  entertainment,
 }

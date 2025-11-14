@@ -12,6 +12,7 @@ class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
   AllnewsBloc(this.repository) : super(AllnewsInitial()) {
     on<FetchNewsEvent>(_onFetchNews);
     on<SearchNewsEvent>(_onDiscoverNews);
+    on<FetchCategoryNewsEvent>(_onFetchCategoryNews);
   }
 
   Future<void> _onFetchNews(
@@ -28,17 +29,31 @@ class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
     }
   }
 
+  Future<void> _onFetchCategoryNews(
+    FetchCategoryNewsEvent event,
+    Emitter<AllnewsState> emit,
+  ) async {
+    emit(Allnewsloading());
+    try {
+      final categoryString = _categoryToString(event.category);
+      final articles = await repository.discoverNews(categoryString);
+      emit(Newsloaded(articles: articles));
+    } catch (e) {
+      emit(NewsError(messege: e.toString()));
+    }
+  }
+
   String _categoryToString(Category? category) {
     switch (category) {
       case Category.business:
         return "business";
 
-      case Category.all:
+      case Category.general:
         return "all";
-      case Category.sport:
+      case Category.sports:
         return "sport";
 
-      case Category.politic:
+      case Category.politics:
         return "politic";
 
       case Category.technology:
@@ -46,8 +61,12 @@ class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
 
       case Category.health:
         return "health";
+      case Category.science:
+        return "science";
+      case Category.entertainment:
+        return "entertainment";
       default:
-        return "all";
+        return "general";
     }
   }
 

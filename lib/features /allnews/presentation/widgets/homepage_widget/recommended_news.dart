@@ -25,7 +25,7 @@ class ShowRecommendedNews extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Container(
+                child: SizedBox(
                   height: size.height * 0.12,
                   width: size.width * 0.27,
                   child: Image.network("${data.urlToImage}", fit: BoxFit.cover),
@@ -87,39 +87,6 @@ class ShowRecommendedNews extends StatelessWidget {
             ],
           ),
         );
-        // return ListTile(
-        // leading: Container(
-        //   height: 60,
-        //   width: 50,
-        //   decoration: BoxDecoration(
-        //     borderRadius: BorderRadius.circular(15),
-        //     color: Colors.red,
-        //   ),
-        //   child: Image.network("${data.urlToImage}", fit: BoxFit.cover),
-        // ),
-        //   title: Text("${data.title}"),
-        // subtitle: Row(
-        //   children: [
-        //     Icon(Icons.person, color: AppColors.primaryColor),
-        //     Text(
-        //       "${data.author}",
-        //       style: TextStyle(
-        //         fontSize: 17,
-        //         fontWeight: FontWeight.normal,
-        //         color: AppColors.textSecondary,
-        //       ),
-        //     ),
-        //     Text(
-        //       "${data.publishedAt}",
-        //       style: TextStyle(
-        //         fontSize: 17,
-        //         fontWeight: FontWeight.normal,
-        //         color: AppColors.textSecondary,
-        //       ),
-        //     ),
-        //   ],
-        // ),
-        // );
       },
     );
   }
