@@ -11,10 +11,12 @@ class NewsRepository {
     String? sources,
   }) async {
     final params = <String, dynamic>{};
-    params["sources"] = "techcrunch";
+   
 
     if (category != null && category.isNotEmpty) {
       params["category"] = category;
+    }else{
+ params["sources"] = "techcrunch";
     }
     try {
       final response = await newsservices.fetchNews(
@@ -32,8 +34,9 @@ class NewsRepository {
           "Failed to fetch the data: Status code ${response.statusCode}",
         );
       }
-    } catch (e) {
+    } catch (e,st) {
       log("There is some error while fetching the headlines ");
+      log("Stack trace: $st");
       rethrow;
     }
   }
@@ -44,7 +47,7 @@ class NewsRepository {
     if (category.isNotEmpty) {
       params["category"] = category;
     } else {
-      params["category"] = "all";
+      params["category"] = "general";
     }
     try {
       final response = await newsservices.fetchNews(
@@ -61,8 +64,9 @@ class NewsRepository {
           "Failed to fetch the data: Status code ${response.statusCode}",
         );
       }
-    } catch (e) {
+    } catch (e,st) {
       log("Failed to load data ");
+      log("Stack trace: $st");
       rethrow;
     }
   }
@@ -91,8 +95,10 @@ class NewsRepository {
           "Failed to search the data: Status code ${response.statusCode}",
         );
       }
-    } catch (e) {
+    } catch (e,st) {
+         log("Stack trace: $st");
       throw Exception("Error occurred while searcjhing data $e");
+   
     }
   }
 }

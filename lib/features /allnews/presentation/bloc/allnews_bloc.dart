@@ -49,12 +49,12 @@ class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
         return "business";
 
       case Category.general:
-        return "all";
+        return "general";
       case Category.sports:
         return "sport";
 
       case Category.politics:
-        return "politic";
+        return "politics";
 
       case Category.technology:
         return "technology";

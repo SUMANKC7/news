@@ -27,6 +27,12 @@ class _NewsHomePageState extends State<NewsHomePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    context.read<AllnewsBloc>().add(FetchNewsEvent());
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

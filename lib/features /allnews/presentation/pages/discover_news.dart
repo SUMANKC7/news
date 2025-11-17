@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
 import 'package:weatherapp/features%20/allnews/presentation/bloc/allnews_bloc.dart';
-import 'package:weatherapp/features%20/allnews/presentation/widgets/discoverpage_widget/showcategory.dart';
 import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/recommended_news.dart';
+import 'package:weatherapp/features%20/category_enum.dart';
 
 class DiscoverNews extends StatefulWidget {
   const DiscoverNews({super.key});
@@ -15,7 +15,17 @@ class DiscoverNews extends StatefulWidget {
 
 class _DiscoverNewsState extends State<DiscoverNews> {
   final TextEditingController queryController = TextEditingController();
-  List<AllnewsModel> articles = [];
+  // List<AllnewsModel> articles = [];
+  final categorytype = Category.values;
+  Category selectedcategory = Category.general;
+  @override
+  void initState() {
+    super.initState();
+    context.read<AllnewsBloc>().add(
+      FetchCategoryNewsEvent(category: selectedcategory),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,16 +104,59 @@ class _DiscoverNewsState extends State<DiscoverNews> {
                 ),
               ),
 
-              Showcategory(),
-              BlocListener<AllnewsBloc, AllnewsState>(
-                listener: (context, state) {
-                  if (state is Newsloaded) {
-                    setState(() {
-                      articles = state.articles;
-                    });
+              // Showcategory(),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: categorytype.map<Widget>((cat) {
+                    final name =
+                        cat.name[0].toUpperCase() + cat.name.substring(1);
+                    final isSelected = cat == selectedcategory;
+
+                    return Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 10,
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            selectedcategory = cat;
+                          });
+                          context.read<AllnewsBloc>().add(
+                            FetchCategoryNewsEvent(category: cat),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: isSelected
+                              ? AppColors
+                                    .primaryColor // selected color
+                              : Colors.grey.shade200, // default color
+                          foregroundColor: isSelected
+                              ? Colors.white
+                              : AppColors.textSecondary,
+                        ),
+                        child: Text(name),
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ),
+              BlocBuilder<AllnewsBloc, AllnewsState>(
+                builder: (context, state) {
+                  if (state is Allnewsloading) {
+                    return const Center(child: CircularProgressIndicator());
                   }
+                  if (state is Newsloaded) {
+                    final List<AllnewsModel> articles = state.articles;
+                    return ShowRecommendedNews(articles: articles);
+                  }
+                  if (state is NewsError) {
+                    return Text("Error; ${state.messege}");
+                  }
+                  return SizedBox();
                 },
-                child: ShowRecommendedNews(articles: articles),
               ),
             ],
           ),

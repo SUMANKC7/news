@@ -19,7 +19,7 @@ class Showcategory extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: ElevatedButton(
               onPressed: () {
-                context.read<AllnewsBloc>().add(FetchNewsEvent(category: cat));
+                context.read<AllnewsBloc>().add(FetchCategoryNewsEvent(category: cat));
               },
               child: Text(name),
             ),

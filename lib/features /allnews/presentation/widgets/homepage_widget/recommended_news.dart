@@ -11,6 +11,7 @@ class ShowRecommendedNews extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+
     return ListView.builder(
       itemCount: articles.length,
       shrinkWrap: true,
@@ -28,7 +29,16 @@ class ShowRecommendedNews extends StatelessWidget {
                 child: SizedBox(
                   height: size.height * 0.12,
                   width: size.width * 0.27,
-                  child: Image.network("${data.urlToImage}", fit: BoxFit.cover),
+                  child: Image.network(
+                    data.urlToImage!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stack) {
+                      return Icon(
+                        Icons.image_not_supported,
+                        color: AppColors.textSecondary,
+                      );
+                    },
+                  ),
                 ),
               ),
               SizedBox(width: 10),

@@ -16,7 +16,7 @@ void main() {
         BlocProvider(
           create: (context) =>
               AllnewsBloc(newsRepository)
-                ..add(FetchNewsEvent()),
+               ,
         ),
       ],
       child: const NewsApp(),
