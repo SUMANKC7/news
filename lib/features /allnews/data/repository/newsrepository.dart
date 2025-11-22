@@ -11,12 +11,11 @@ class NewsRepository {
     String? sources,
   }) async {
     final params = <String, dynamic>{};
-   
 
     if (category != null && category.isNotEmpty) {
       params["category"] = category;
-    }else{
- params["sources"] = "techcrunch";
+    } else {
+      params["sources"] = "techcrunch";
     }
     try {
       final response = await newsservices.fetchNews(
@@ -34,7 +33,7 @@ class NewsRepository {
           "Failed to fetch the data: Status code ${response.statusCode}",
         );
       }
-    } catch (e,st) {
+    } catch (e, st) {
       log("There is some error while fetching the headlines ");
       log("Stack trace: $st");
       rethrow;
@@ -64,7 +63,7 @@ class NewsRepository {
           "Failed to fetch the data: Status code ${response.statusCode}",
         );
       }
-    } catch (e,st) {
+    } catch (e, st) {
       log("Failed to load data ");
       log("Stack trace: $st");
       rethrow;
@@ -73,10 +72,19 @@ class NewsRepository {
 
   Future<List<AllnewsModel>> searchNews(String? query) async {
     final userquery = <String, dynamic>{};
+    final now = DateTime.now();
+    final formattedDate =
+        "${now.year}-${now.month.toString().padLeft(2, "0")}-${now.day.toString().padLeft(2, "0")}"
+            .trim();
+
     if (query != null && query.isNotEmpty) {
       userquery["q"] = query;
-      userquery["from"] = "2025-10-11";
-      userquery["sortBy"] = "publishedAt";
+      userquery["from"] = "2025-11-19&to=2025-11-19";
+      userquery["sortBy"] = "popularity";
+    } else {
+      userquery["q"] = "apple";
+      userquery["from"] = "2025-11-19&to=2025-11-19";
+      userquery["sortBy"] = "popularity";
     }
 
     try {
@@ -85,8 +93,8 @@ class NewsRepository {
         params: userquery,
       );
       if (response.statusCode == 200) {
-        final jsonResponse = response.data["articles"];
-        log(jsonResponse);
+        final List<dynamic> jsonResponse = response.data["articles"];
+        log("$jsonResponse");
         return jsonResponse
             .map((newsarticle) => AllnewsModel.fromJson(newsarticle))
             .toList();
@@ -95,10 +103,9 @@ class NewsRepository {
           "Failed to search the data: Status code ${response.statusCode}",
         );
       }
-    } catch (e,st) {
-         log("Stack trace: $st");
+    } catch (e, st) {
+      log("Stack trace: $st");
       throw Exception("Error occurred while searcjhing data $e");
-   
     }
   }
 }

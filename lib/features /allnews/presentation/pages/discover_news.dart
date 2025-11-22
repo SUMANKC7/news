@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
-import 'package:weatherapp/features%20/allnews/presentation/bloc/allnews_bloc.dart';
+import 'package:weatherapp/features%20/allnews/presentation/bloc/discovernewsbloc/discovernews_bloc.dart';
 import 'package:weatherapp/features%20/allnews/presentation/pages/search_news.dart';
 import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/recommended_news.dart';
 import 'package:weatherapp/features%20/category_enum.dart';
@@ -16,13 +16,13 @@ class DiscoverNews extends StatefulWidget {
 
 class _DiscoverNewsState extends State<DiscoverNews> {
   
-  // List<AllnewsModel> articles = [];
+  List<AllnewsModel> discovernewsarticles = [];
   final categorytype = Category.values;
   Category selectedcategory = Category.general;
   @override
   void initState() {
     super.initState();
-    context.read<AllnewsBloc>().add(
+    context.read<DiscovernewsBloc>().add(
       FetchCategoryNewsEvent(category: selectedcategory),
     );
   }
@@ -140,16 +140,16 @@ class _DiscoverNewsState extends State<DiscoverNews> {
 
               // Showcategory(),
               _buildcategoryTiles(),
-              BlocBuilder<AllnewsBloc, AllnewsState>(
+              BlocBuilder<DiscovernewsBloc, DiscovernewsState>(
                 builder: (context, state) {
-                  if (state is Allnewsloading) {
+                  if (state is DiscoverNewsloading) {
                     return const Center(child: CircularProgressIndicator());
                   }
-                  if (state is Newsloaded) {
-                    final List<AllnewsModel> articles = state.articles;
-                    return ShowRecommendedNews(articles: articles);
+                  if (state is CategoryNewsLoaded) {
+                     discovernewsarticles = state.categorynewsarticles;
+                    return ShowRecommendedNews(articles: discovernewsarticles);
                   }
-                  if (state is NewsError) {
+                  if (state is DiscoverNewsError) {
                     return Text("Error; ${state.messege}");
                   }
                   return SizedBox();
@@ -177,7 +177,7 @@ class _DiscoverNewsState extends State<DiscoverNews> {
                 setState(() {
                   selectedcategory = cat;
                 });
-                context.read<AllnewsBloc>().add(
+                context.read<DiscovernewsBloc>().add(
                   FetchCategoryNewsEvent(category: cat),
                 );
               },

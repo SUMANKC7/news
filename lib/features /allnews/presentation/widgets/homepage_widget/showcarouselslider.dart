@@ -5,11 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
-import 'package:weatherapp/features%20/allnews/presentation/bloc/allnews_bloc.dart';
+import 'package:weatherapp/features%20/allnews/presentation/bloc/allnewsbloc/allnews_bloc.dart';
 
 class ShowCarouselSlider extends StatelessWidget {
-   const ShowCarouselSlider({super.key, required this.onPageChanged});
-   final Function(int) onPageChanged;
+  const ShowCarouselSlider({super.key, required this.onPageChanged});
+  final Function(int) onPageChanged;
 
   final int activeIndex = 0;
 
@@ -20,7 +20,7 @@ class ShowCarouselSlider extends StatelessWidget {
         if (state is Allnewsloading) {
           return const Center(child: CircularProgressIndicator());
         }
-        if (state is Newsloaded) {
+        if (state is RecommendedNewsLoaded) {
           final List<AllnewsModel> articles = state.articles;
           return CarouselSlider.builder(
             itemCount: articles.length,

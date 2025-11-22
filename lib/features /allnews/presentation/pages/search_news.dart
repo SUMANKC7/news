@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
-import 'package:weatherapp/features%20/allnews/presentation/bloc/allnews_bloc.dart';
+import 'package:weatherapp/features%20/allnews/presentation/bloc/allnewsbloc/allnews_bloc.dart';
+import 'package:weatherapp/features%20/allnews/presentation/bloc/searchnewsbloc/searchnewsbloc_bloc.dart';
 import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/recommended_news.dart';
 
 class SearchNews extends StatefulWidget {
@@ -18,7 +19,7 @@ class _SearchNewsState extends State<SearchNews> {
   @override
   void initState() {
     super.initState();
-    context.read<AllnewsBloc>().add(
+    context.read<SearchnewsblocBloc>().add(
       SearchNewsEvent(query: queryController.text.toLowerCase().trim()),
     );
   }
@@ -83,17 +84,22 @@ class _SearchNewsState extends State<SearchNews> {
                 ],
               ),
             ),
-
-            BlocBuilder<AllnewsBloc, AllnewsState>(
+            SizedBox(height: 30),
+            BlocBuilder<SearchnewsblocBloc, SearchnewsblocState>(
               builder: (context, state) {
                 if (state is Allnewsloading) {
                   return CircularProgressIndicator();
                 }
-                if (state is Newsloaded) {
-                  final List<AllnewsModel> newsarticles = state.articles;
-                  ShowRecommendedNews(articles: newsarticles);
+                if (state is SearchNewsLoaded) {
+                  final List<AllnewsModel> newsarticles =
+                      state.searchnewsarticles;
+                  return Expanded(
+                    child: SingleChildScrollView(
+                      child: ShowRecommendedNews(articles: newsarticles),
+                    ),
+                  );
                 }
-                if (state is NewsError) {
+                if (state is SearchNewserror) {
                   return Center(child: Text("Error: ${state.messege}"));
                 }
                 return SizedBox();

@@ -11,8 +11,6 @@ class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
 
   AllnewsBloc(this.repository) : super(AllnewsInitial()) {
     on<FetchNewsEvent>(_onFetchNews);
-    on<SearchNewsEvent>(_onDiscoverNews);
-    on<FetchCategoryNewsEvent>(_onFetchCategoryNews);
   }
 
   Future<void> _onFetchNews(
@@ -23,21 +21,7 @@ class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
     try {
       final categoryString = _categoryToString(event.category);
       final articles = await repository.fetchNews(category: categoryString);
-      emit(Newsloaded(articles: articles));
-    } catch (e) {
-      emit(NewsError(messege: e.toString()));
-    }
-  }
-
-  Future<void> _onFetchCategoryNews(
-    FetchCategoryNewsEvent event,
-    Emitter<AllnewsState> emit,
-  ) async {
-    emit(Allnewsloading());
-    try {
-      final categoryString = _categoryToString(event.category);
-      final articles = await repository.discoverNews(categoryString);
-      emit(Newsloaded(articles: articles));
+      emit(RecommendedNewsLoaded(articles: articles));
     } catch (e) {
       emit(NewsError(messege: e.toString()));
     }
@@ -67,19 +51,6 @@ class AllnewsBloc extends Bloc<AllnewsEvent, AllnewsState> {
         return "entertainment";
       default:
         return "general";
-    }
-  }
-
-  Future<void> _onDiscoverNews(
-    SearchNewsEvent event,
-    Emitter<AllnewsState> emit,
-  ) async {
-    emit(Allnewsloading());
-    try {
-      final articles = await repository.searchNews(event.query);
-      emit(Newsloaded(articles: articles));
-    } catch (e) {
-      emit(NewsError(messege: e.toString()));
     }
   }
 }

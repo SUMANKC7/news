@@ -6,11 +6,12 @@ class AllnewsInitial extends AllnewsState {}
 
 class Allnewsloading extends AllnewsState {}
 
-class Newsloaded extends AllnewsState {
+class RecommendedNewsLoaded extends AllnewsState {
   final List<AllnewsModel> articles;
 
-  Newsloaded({required this.articles});
+  RecommendedNewsLoaded({required this.articles});
 }
+
 
 class NewsError extends AllnewsState {
   final String messege;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:weatherapp/features%20/allnews/presentation/bloc/allnews_bloc.dart';
+import 'package:weatherapp/features%20/allnews/presentation/bloc/discovernewsbloc/discovernews_bloc.dart';
 import 'package:weatherapp/features%20/category_enum.dart';
 
 class Showcategory extends StatelessWidget {
@@ -19,7 +19,7 @@ class Showcategory extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: ElevatedButton(
               onPressed: () {
-                context.read<AllnewsBloc>().add(FetchCategoryNewsEvent(category: cat));
+                context.read<DiscovernewsBloc>().add(FetchCategoryNewsEvent(category: cat));
               },
               child: Text(name),
             ),
