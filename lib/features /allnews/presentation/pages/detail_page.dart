@@ -14,7 +14,9 @@ class DetailPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context);
+          },
           style: IconButton.styleFrom(
             backgroundColor: Colors.transparent.withValues(alpha: 0.3),
           ),
@@ -53,13 +55,145 @@ class DetailPage extends StatelessWidget {
           Stack(
             children: [
               SizedBox(
-                height: MediaQuery.of(context).size.height * 0.45,
+                height: MediaQuery.of(context).size.height * 0.55,
                 width: double.infinity,
                 child: Image.network("${data.urlToImage}", fit: BoxFit.cover),
               ),
+              Positioned(
+                bottom: 50,
+                left: 7,
+                right: 9,
+                top: MediaQuery.of(context).size.height * 0.28,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.3),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min, // Changed to min
+                        children: [
+                          // Author row with flexible constraints
+                          Row(
+                            children: [
+                              Flexible(
+                                // Changed from Flexible to Expanded
+                                child: Text(
+                                  data.author ?? "Unknown Author",
+                                  style: TextStyle(
+                                    fontSize: 17, // Slightly smaller
+                                    fontWeight: FontWeight.normal,
+                                    color: AppColors.backgroundColor,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                width: 20,
+                                height: 20,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.primaryColor,
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                    size: 15,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          // Title with more constrained space
+                          Expanded(
+                            // Added Expanded to prevent overflow
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  data.title ?? "No Title",
+                                  style: TextStyle(
+                                    fontSize: 18, // Slightly smaller
+                                    fontWeight: FontWeight.bold,
+                                    color: AppColors.backgroundColor,
+                                  ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 5),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.fiber_manual_record,
+                                      color: AppColors.backgroundColor,
+                                      size: 10,
+                                    ),
+                                    SizedBox(width: 10),
+                                    Text(
+                                      timeAgo("${data.publishedAt}"),
+                                      style: TextStyle(
+                                        color: AppColors.backgroundColor,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 17,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    SizedBox(
+                                      width:
+                                          MediaQuery.sizeOf(context).width *
+                                          0.4,
+                                      child: ElevatedButton(
+                                        onPressed: () {},
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                              AppColors.primaryColor,
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(
+                                              Icons.link_rounded,
+                                              color: AppColors.backgroundColor,
+                                            ),
+
+                                            // SizedBox(width: 10),
+                                            Text(
+                                              "Full news",
+                                              style: TextStyle(
+                                                fontSize:
+                                                    15, // Slightly smaller
+                                                fontWeight: FontWeight.bold,
+                                                color:
+                                                    AppColors.backgroundColor,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
 
               Positioned(
-                top: MediaQuery.of(context).size.height * 0.38,
+                top: MediaQuery.of(context).size.height * 0.5,
                 left: 0,
                 right: 0,
                 bottom: 0,
@@ -70,10 +204,7 @@ class DetailPage extends StatelessWidget {
                       top: Radius.circular(50),
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Text("Hello"),
-                  ),
+                  child: Padding(padding: const EdgeInsets.all(16.0)),
                 ),
               ),
             ],
@@ -81,6 +212,38 @@ class DetailPage extends StatelessWidget {
           Expanded(
             child: Container(
               decoration: BoxDecoration(color: AppColors.backgroundColor),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  // vertical: 10,
+                  horizontal: 15,
+                ),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Text(
+                        data.title ?? "No Title",
+                        style: TextStyle(
+                          fontSize: 22, // Slightly smaller
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.textPrimary,
+                        ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      SizedBox(height: 40),
+                      Text(
+                        "${data.content}",
+                        style: TextStyle(
+                          fontSize: 17, // Slightly smaller
+                          fontWeight: FontWeight.normal,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ),
         ],
