@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
 import 'package:weatherapp/features%20/allnews/presentation/bloc/allnewsbloc/allnews_bloc.dart';
+import 'package:weatherapp/features%20/allnews/presentation/pages/search_news.dart';
 import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/carousel_page_indicator.dart';
 import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/recommended_news.dart';
 import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/showcarouselslider.dart';
@@ -43,7 +44,10 @@ class _NewsHomePageState extends State<NewsHomePage> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchNews()),
+            ),
             style: IconButton.styleFrom(
               backgroundColor: AppColors.buttonBackground,
             ),
@@ -73,22 +77,19 @@ class _NewsHomePageState extends State<NewsHomePage> {
                 children: [
                   Text(
                     "Breaking News",
-                    style: TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "View All",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.normal,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                  ),
+                  // TextButton(
+                  //   onPressed: () {},
+                  //   child: Text(
+                  //     "View All",
+                  //     style: TextStyle(
+                  //       fontSize: 17,
+                  //       fontWeight: FontWeight.normal,
+                  //       color: AppColors.primaryColor,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -100,7 +101,7 @@ class _NewsHomePageState extends State<NewsHomePage> {
                 itemcount: _itemCount,
               ),
             SizedBox(height: 20),
-        
+
             Padding(
               padding: EdgeInsetsGeometry.symmetric(
                 horizontal: 17,
@@ -111,22 +112,19 @@ class _NewsHomePageState extends State<NewsHomePage> {
                 children: [
                   Text(
                     "Recommendation",
-                    style: TextStyle(
-                      fontSize: 21,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text(
-                      "View All",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.normal,
-                        color: AppColors.primaryColor,
-                      ),
-                    ),
-                  ),
+                  // TextButton(
+                  //   onPressed: () {},
+                  //   child: Text(
+                  //     "View All",
+                  //     style: TextStyle(
+                  //       fontSize: 17,
+                  //       fontWeight: FontWeight.normal,
+                  //       color: AppColors.primaryColor,
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),

@@ -17,7 +17,7 @@ class _PresistantBottomNavBarState extends State<PresistantBottomNavBar> {
     initialIndex: 0,
   );
   List<Widget> _screens() {
-    return [NewsHomePage(), DiscoverNews(), Bookmarkpage()];
+    return [NewsHomePage(), DiscoverNews(), BookmarksPage()];
   }
 
   List<PersistentBottomNavBarItem> _items() {

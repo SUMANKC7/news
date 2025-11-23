@@ -1,8 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
-import 'package:weatherapp/features%20/allnews/presentation/bloc/allnewsbloc/allnews_bloc.dart';
+
 import 'package:weatherapp/features%20/allnews/presentation/bloc/searchnewsbloc/searchnewsbloc_bloc.dart';
 import 'package:weatherapp/features%20/allnews/presentation/widgets/homepage_widget/recommended_news.dart';
 
@@ -15,13 +17,29 @@ class SearchNews extends StatefulWidget {
 
 class _SearchNewsState extends State<SearchNews> {
   final TextEditingController queryController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
-    context.read<SearchnewsblocBloc>().add(
-      SearchNewsEvent(query: queryController.text.toLowerCase().trim()),
-    );
+
+    queryController.addListener(_onSearchChanged);
+  }
+
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      final query = queryController.text.toLowerCase().trim();
+      context.read<SearchnewsblocBloc>().add(SearchNewsEvent(query: query));
+    });
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    queryController.dispose();
+    super.dispose();
   }
 
   @override
@@ -31,11 +49,8 @@ class _SearchNewsState extends State<SearchNews> {
         elevation: 0,
         surfaceTintColor: Colors.transparent,
         backgroundColor: Theme.of(context).colorScheme.surface,
-
         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: () => Navigator.pop(context),
           style: IconButton.styleFrom(
             backgroundColor: AppColors.buttonBackground,
           ),
@@ -46,11 +61,12 @@ class _SearchNewsState extends State<SearchNews> {
         padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
         child: Column(
           children: [
+            // Search Field
             Container(
               height: 50,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: AppColors.textSecondary.withValues(alpha: 0.2),
+                color: AppColors.textSecondary.withAlpha(50),
                 borderRadius: BorderRadius.circular(25),
               ),
               child: Row(
@@ -59,9 +75,9 @@ class _SearchNewsState extends State<SearchNews> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 10),
                       child: TextFormField(
+                        controller: queryController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          focusedBorder: InputBorder.none,
                           icon: Icon(
                             Icons.search_rounded,
                             size: 30,
@@ -70,29 +86,26 @@ class _SearchNewsState extends State<SearchNews> {
                           hintText: "Search",
                           hintStyle: TextStyle(color: AppColors.textSecondary),
                         ),
-                        controller: queryController,
                       ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.filter_list,
-                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
               ),
             ),
             SizedBox(height: 30),
+
+            // Search results
             BlocBuilder<SearchnewsblocBloc, SearchnewsblocState>(
               builder: (context, state) {
-                if (state is Allnewsloading) {
+                if (state is SearchNewsloading) {
                   return CircularProgressIndicator();
                 }
                 if (state is SearchNewsLoaded) {
                   final List<AllnewsModel> newsarticles =
                       state.searchnewsarticles;
+                  if (newsarticles.isEmpty) {
+                    return Text("No results found");
+                  }
                   return Expanded(
                     child: SingleChildScrollView(
                       child: ShowRecommendedNews(articles: newsarticles),

@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:weatherapp/core/theme/colors.dart';
 import 'package:weatherapp/features%20/allnews/data/model/allnews_model.dart';
+import 'package:weatherapp/features%20/allnews/presentation/widgets/detailpage/bookmark.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   final AllnewsModel data;
   const DetailPage({super.key, required this.data});
 
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,16 +33,7 @@ class DetailPage extends StatelessWidget {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.transparent.withValues(alpha: 0.3),
-            ),
-            icon: Icon(
-              Icons.bookmark_outline_rounded,
-              color: AppColors.backgroundColor,
-            ),
-          ),
+          BookmarkButton(article: widget.data),
           SizedBox(width: 5),
           IconButton(
             onPressed: () {},
@@ -57,7 +55,10 @@ class DetailPage extends StatelessWidget {
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.55,
                 width: double.infinity,
-                child: Image.network("${data.urlToImage}", fit: BoxFit.cover),
+                child: Image.network(
+                  "${widget.data.urlToImage}",
+                  fit: BoxFit.cover,
+                ),
               ),
               Positioned(
                 bottom: 50,
@@ -75,17 +76,15 @@ class DetailPage extends StatelessWidget {
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min, // Changed to min
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Author row with flexible constraints
                           Row(
                             children: [
                               Flexible(
-                                // Changed from Flexible to Expanded
                                 child: Text(
-                                  data.author ?? "Unknown Author",
+                                  widget.data.author ?? "Unknown Author",
                                   style: TextStyle(
-                                    fontSize: 17, // Slightly smaller
+                                    fontSize: 17,
                                     fontWeight: FontWeight.normal,
                                     color: AppColors.backgroundColor,
                                   ),
@@ -112,14 +111,13 @@ class DetailPage extends StatelessWidget {
                             ],
                           ),
                           const SizedBox(height: 8),
-                          // Title with more constrained space
+
                           Expanded(
-                            // Added Expanded to prevent overflow
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  data.title ?? "No Title",
+                                  widget.data.title ?? "No Title",
                                   style: TextStyle(
                                     fontSize: 18, // Slightly smaller
                                     fontWeight: FontWeight.bold,
@@ -138,7 +136,7 @@ class DetailPage extends StatelessWidget {
                                     ),
                                     SizedBox(width: 10),
                                     Text(
-                                      timeAgo("${data.publishedAt}"),
+                                      timeAgo("${widget.data.publishedAt}"),
                                       style: TextStyle(
                                         color: AppColors.backgroundColor,
                                         fontWeight: FontWeight.bold,
@@ -151,7 +149,60 @@ class DetailPage extends StatelessWidget {
                                           MediaQuery.sizeOf(context).width *
                                           0.4,
                                       child: ElevatedButton(
-                                        onPressed: () {},
+                                        onPressed: () async {
+                                          final urlString = widget.data.url;
+                                          if (urlString == null ||
+                                              urlString.isEmpty) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  "No URL available",
+                                                ),
+                                              ),
+                                            );
+                                            return;
+                                          }
+
+                                          final uri = Uri.tryParse(urlString);
+                                          if (uri == null) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text("Invalid URL"),
+                                              ),
+                                            );
+                                            return;
+                                          }
+
+                                          try {
+                                            if (!await launchUrl(
+                                              uri,
+                                              mode: LaunchMode
+                                                  .externalApplication,
+                                            )) {
+                                              ScaffoldMessenger.of(
+                                                context,
+                                              ).showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                    "Could not open link",
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          } catch (e) {
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text("Error: $e"),
+                                              ),
+                                            );
+                                          }
+                                        },
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor:
                                               AppColors.primaryColor,
@@ -164,13 +215,10 @@ class DetailPage extends StatelessWidget {
                                               Icons.link_rounded,
                                               color: AppColors.backgroundColor,
                                             ),
-
-                                            // SizedBox(width: 10),
                                             Text(
                                               "Full news",
                                               style: TextStyle(
-                                                fontSize:
-                                                    15, // Slightly smaller
+                                                fontSize: 15,
                                                 fontWeight: FontWeight.bold,
                                                 color:
                                                     AppColors.backgroundColor,
@@ -221,7 +269,7 @@ class DetailPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        data.title ?? "No Title",
+                        widget.data.title ?? "No Title",
                         style: TextStyle(
                           fontSize: 22, // Slightly smaller
                           fontWeight: FontWeight.bold,
@@ -233,7 +281,7 @@ class DetailPage extends StatelessWidget {
 
                       SizedBox(height: 40),
                       Text(
-                        "${data.content}",
+                        "${widget.data.content}",
                         style: TextStyle(
                           fontSize: 17, // Slightly smaller
                           fontWeight: FontWeight.normal,

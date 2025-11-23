@@ -5,6 +5,7 @@ import 'package:weatherapp/core/services/apiclient.dart';
 import 'package:weatherapp/features%20/allnews/data/repository/newsrepository.dart';
 import 'package:weatherapp/features%20/allnews/data/services/newsservices.dart';
 import 'package:weatherapp/features%20/allnews/presentation/bloc/allnewsbloc/allnews_bloc.dart';
+import 'package:weatherapp/features%20/allnews/presentation/bloc/bookmarkbloc/bookmark_bloc.dart';
 import 'package:weatherapp/features%20/allnews/presentation/bloc/discovernewsbloc/discovernews_bloc.dart';
 import 'package:weatherapp/features%20/allnews/presentation/bloc/searchnewsbloc/searchnewsbloc_bloc.dart';
 
@@ -15,13 +16,10 @@ void main() {
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) =>
-              AllnewsBloc(newsRepository)
-               ,
-        ),
-        BlocProvider(create: (context)=>DiscovernewsBloc(newsRepository)),
-        BlocProvider(create: (context)=>SearchnewsblocBloc(newsRepository)),
+        BlocProvider(create: (context) => AllnewsBloc(newsRepository)),
+        BlocProvider(create: (context) => DiscovernewsBloc(newsRepository)),
+        BlocProvider(create: (context) => SearchnewsblocBloc(newsRepository)),
+        BlocProvider(create: (context) => BookmarkBloc()),
       ],
       child: const NewsApp(),
     ),
